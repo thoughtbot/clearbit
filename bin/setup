@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+set -e
+
+# Install godep
+go get github.com/tools/godep
+
+# Restore dependencies from Godeps
+godep restore
