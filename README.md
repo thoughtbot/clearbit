@@ -3,6 +3,54 @@ clearbit
 
 `clearbit` is a command-line interface to the Clearbit API.
 
+Install
+-------
+
+```
+go get github.com/thoughtbot/clearbit/cmd/clearbit
+```
+
+Usage
+-----
+
+To use the `clearbit` command,
+first store your [Clearbit API key][clearbit-api-key] in `~/.clearbit_key`.
+
+Then use the subcommands to interact with the different
+[Clearbit API endpoints][clearbit-api].
+
+For example:
+
+```
+> clearbit prospect -title CEO -title COO thoughtbot.com
+[
+  {
+    "id": "...",
+    "name": {
+      "givenName": "Chad",
+      "familyName": "Pytel",
+      "fullName": "Chad Pytel"
+    },
+    "title": "Founder and CEO",
+    "email": "chad@thoughtbot.com",
+    "verified": true
+  },
+  {
+    "id": "...",
+    "name": {
+      "givenName": "Matt",
+      "familyName": "Jankowski",
+      "fullName": "Matt Jankowski"
+    },
+    "title": "COO",
+    "email": "mjankowski@thoughtbot.com",
+    "verified": true
+  }
+]
+```
+
+  [clearbit-api]: https://clearbit.com/docs
+  [clearbit-api-key]: https://dashboard.clearbit.com/keys
 
 Contributing
 ------------
