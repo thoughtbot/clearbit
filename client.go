@@ -5,12 +5,14 @@ import (
 	"net/url"
 )
 
+// These are the valid services and resources of the Clearbit API.
 const (
 	ProspectorPersonSearchURL = "https://prospector.clearbit.com/v1/people/search"
 	StreamingCompanySearchURL = "https://company-stream.clearbit.com/v2/companies/find"
 	StreamingPersonSearchURL  = "https://person-stream.clearbit.com/v2/people/find"
 )
 
+// Client provides access to the Clearbit API.
 type Client struct {
 	apiKey string
 

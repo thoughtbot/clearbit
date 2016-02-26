@@ -3,10 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"io/ioutil"
-	"net/http"
-	"net/url"
 	"os"
 	"os/user"
 	"path"
@@ -26,16 +23,8 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
-		{
-			Name:      "prospect",
-			Usage:     "fetch contacts for a company",
-			ArgsUsage: "domain",
-			Action:    prospectSearch,
-			Flags: []cli.Flag{
-				cli.StringSliceFlag{Name: "title", Usage: "Job title to filter by"},
-				cli.BoolTFlag{Name: "email", Usage: "Include contact emails"},
-			},
-		},
+		enrichCommand,
+		prospectCommand,
 	}
 	app.RunAndExitOnError()
 }
@@ -64,35 +53,22 @@ func clearbitKeyLoader(key *string) func(*cli.Context) error {
 	}
 }
 
+func apiKeyFromContext(ctx *cli.Context) string {
+	return ctx.GlobalString("api-key")
+}
+
+func requiredArg(ctx *cli.Context, n int) string {
+	arg := ctx.Args().Get(n)
+
+	if arg == "" {
+		cli.ShowSubcommandHelp(ctx)
+		os.Exit(1)
+	}
+
+	return arg
+}
+
 func abort(reason interface{}) {
 	fmt.Printf("ERROR: %s\n", reason)
 	os.Exit(1)
-}
-
-func prospectSearch(ctx *cli.Context) {
-	domain := ctx.Args().First()
-	if domain == "" {
-		abort("domain required")
-	}
-
-	req, err := http.NewRequest("GET", "https://prospector.clearbit.com/v1/people/search", nil)
-	if err != nil {
-		abort(err)
-	}
-
-	req.SetBasicAuth(ctx.GlobalString("api-key"), "")
-
-	req.URL.RawQuery = url.Values{
-		"domain":   []string{domain},
-		"email":    []string{fmt.Sprintf("%b", ctx.BoolT("email"))},
-		"titles[]": ctx.StringSlice("title"),
-	}.Encode()
-
-	res, err := http.DefaultClient.Do(req)
-	defer res.Body.Close()
-	if err != nil {
-		abort(err)
-	}
-
-	io.Copy(os.Stdout, res.Body)
 }
