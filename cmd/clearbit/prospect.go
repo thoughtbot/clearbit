@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"net/url"
 	"os"
@@ -17,16 +16,14 @@ var prospectCommand = cli.Command{
 	Action:    prospect,
 	Flags: []cli.Flag{
 		cli.StringSliceFlag{Name: "title", Usage: "Job title to filter by"},
-		cli.BoolTFlag{Name: "email", Usage: "Include contact emails"},
 	},
 }
 
 func prospect(ctx *cli.Context) {
 	var (
-		apiKey       = apiKeyFromContext(ctx)
-		domain       = requiredArg(ctx, 0)
-		titles       = ctx.StringSlice("title")
-		includeEmail = ctx.BoolT("email")
+		apiKey = apiKeyFromContext(ctx)
+		domain = requiredArg(ctx, 0)
+		titles = ctx.StringSlice("title")
 	)
 
 	client := clearbit.NewClient(apiKey)
@@ -35,7 +32,7 @@ func prospect(ctx *cli.Context) {
 		clearbit.ProspectorPersonSearchURL,
 		url.Values{
 			"domain":   []string{domain},
-			"email":    []string{fmt.Sprintf("%t", includeEmail)},
+			"email":    []string{"true"},
 			"titles[]": titles,
 		},
 	)
