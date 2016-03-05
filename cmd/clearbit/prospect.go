@@ -15,7 +15,8 @@ var prospectCommand = cli.Command{
 	ArgsUsage: "domain",
 	Action:    prospect,
 	Flags: []cli.Flag{
-		cli.StringSliceFlag{Name: "title", Usage: "Job title to filter by"},
+		cli.StringFlag{Name: "name", Usage: "Filter by first or last name (case-insensitive)"},
+		cli.StringSliceFlag{Name: "title", Usage: "Filter by job title"},
 	},
 }
 
@@ -23,6 +24,7 @@ func prospect(ctx *cli.Context) {
 	var (
 		apiKey = apiKeyFromContext(ctx)
 		domain = requiredArg(ctx, 0)
+		name   = ctx.String("name")
 		titles = ctx.StringSlice("title")
 	)
 
@@ -33,6 +35,7 @@ func prospect(ctx *cli.Context) {
 		url.Values{
 			"domain":   []string{domain},
 			"email":    []string{"true"},
+			"name":     []string{name},
 			"titles[]": titles,
 		},
 	)
