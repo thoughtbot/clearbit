@@ -1,0 +1,6 @@
+{
+  "error": {
+    "type": "params_invalid",
+    "message": "Name is required"
+  }
+}
