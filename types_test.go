@@ -1,18 +1,14 @@
-package clearbit_test
+package clearbit
 
 import (
 	"encoding/json"
 	"testing"
-
-	"github.com/thoughtbot/clearbit"
 )
 
 func TestEnrichmentPersonResponse(t *testing.T) {
-	var person clearbit.Person
+	var person Person
 
-	if err := unmarshalFixture("enrichment_person_response", &person); err != nil {
-		t.Fatal("Failed to unmarshal:", err)
-	}
+	unmarshalFixture(t, "enrichment_person_response", &person)
 
 	if person.ID == "" {
 		t.Fatal("Expected person to be present")
@@ -20,11 +16,9 @@ func TestEnrichmentPersonResponse(t *testing.T) {
 }
 
 func TestEnrichmentCompanyResponse(t *testing.T) {
-	var company clearbit.Company
+	var company Company
 
-	if err := unmarshalFixture("enrichment_company_response", &company); err != nil {
-		t.Fatal("Failed to unmarshal:", err)
-	}
+	unmarshalFixture(t, "enrichment_company_response", &company)
 
 	if company.ID == "" {
 		t.Fatal("Expected company to be present")
@@ -32,11 +26,9 @@ func TestEnrichmentCompanyResponse(t *testing.T) {
 }
 
 func TestErrorResponse(t *testing.T) {
-	var error clearbit.ErrorResponse
+	var error ErrorResponse
 
-	if err := unmarshalFixture("error_response", &error); err != nil {
-		t.Fatal("Failed to unmarshal:", err)
-	}
+	unmarshalFixture(t, "error_response", &error)
 
 	if error.Type != "params_invalid" {
 		t.Fatal("Expected error to be unmarshaled")
@@ -44,7 +36,7 @@ func TestErrorResponse(t *testing.T) {
 }
 
 func TestTwitterID(t *testing.T) {
-	var id clearbit.TwitterID
+	var id TwitterID
 
 	data := []byte(`123`)
 	if err := json.Unmarshal(data, &id); err != nil {

@@ -28,10 +28,10 @@ func prospect(ctx *cli.Context) {
 		titles = ctx.StringSlice("title")
 	)
 
-	client := clearbit.NewClient(apiKey)
+	client := clearbit.NewClient(apiKey, nil)
 
 	res, err := client.Get(
-		clearbit.ProspectorPersonSearchURL,
+		clearbit.ProspectURL,
 		url.Values{
 			"domain":   []string{domain},
 			"email":    []string{"true"},

@@ -23,7 +23,7 @@ func enrich(ctx *cli.Context) {
 		token  = requiredArg(ctx, 0)
 	)
 
-	client := clearbit.NewClient(apiKey)
+	client := clearbit.NewClient(apiKey, nil)
 
 	endpoint, params := prepareLookupRequest(token)
 
@@ -38,10 +38,10 @@ func enrich(ctx *cli.Context) {
 
 func prepareLookupRequest(token string) (string, url.Values) {
 	if isEmail(token) {
-		return clearbit.StreamingPersonSearchURL, url.Values{"email": {token}}
+		return clearbit.EnrichPersonStreamingURL, url.Values{"email": {token}}
 	}
 
-	return clearbit.StreamingCompanySearchURL, url.Values{"domain": {token}}
+	return clearbit.EnrichCompanyStreamingURL, url.Values{"domain": {token}}
 }
 
 func isEmail(s string) bool {
