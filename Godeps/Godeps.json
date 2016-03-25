@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/thoughtbot/clearbit",
-	"GoVersion": "go1.5",
+	"GoVersion": "go1.6",
 	"Packages": [
 		"./..."
 	],
@@ -9,6 +9,10 @@
 			"ImportPath": "github.com/codegangsta/cli",
 			"Comment": "1.2.0-217-g5db7419",
 			"Rev": "5db74198dee1cfe60cf06a611d03a420361baad6"
+		},
+		{
+			"ImportPath": "github.com/jarcoal/httpmock",
+			"Rev": "145b10d659265440f062c31ea15326166bae56ee"
 		}
 	]
 }
