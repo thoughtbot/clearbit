@@ -15,17 +15,14 @@ Fork the repo.
 
 Get a working [Go installation],
 and clone the project into your [Go work environment]
-(that is, `$GOPATH/src/github.com/thoughtbot/$(REPO_NAME)`).
+(that is, `$GOPATH/src/github.com/thoughtbot/clearbit`).
 
   [Go installation]: http://golang.org/doc/install
   [Go work environment]: http://golang.org/doc/code.html
 
 Run `bin/setup` to install the project's dependencies.
 
-If you add or update a dependency,
-run `godep save ./...` to vendor the changes.
-
-To test the `$(REPO_NAME)` package, run `go test ./...`.
+To test the `clearbit` package, run `go test ./...`.
 
 Make your change, with new passing tests.
 
