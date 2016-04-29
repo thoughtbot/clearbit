@@ -121,3 +121,50 @@ func TestClientEnrichPersonClearbitError(t *testing.T) {
 		)
 	}
 }
+
+func TestClientEnrichCompany(t *testing.T) {
+	var (
+		domain = "example.com"
+		apiKey = "clearbit-key"
+
+		request *http.Request
+
+		transport = httpmock.NewMockTransport()
+		client    = NewClient(apiKey, &http.Client{Transport: transport})
+	)
+
+	transport.RegisterResponder(
+		"GET",
+		EnrichCompanyStreamingURL,
+		requestRecorder(
+			&request,
+			httpmock.NewBytesResponder(
+				200,
+				readFixture(t, "enrichment_company_response"),
+			),
+		),
+	)
+
+	company, err := client.EnrichCompany(domain)
+	if err != nil {
+		t.Fatal("EnrichCompany failed:", err)
+	}
+
+	if company.ID == "" {
+		t.Fatal("Expected company to be present")
+	}
+
+	if request == nil {
+		t.Fatal("Request not sent")
+	}
+
+	username, _, _ := request.BasicAuth()
+	if username != apiKey {
+		t.Errorf("basic auth username = %q, want %q", username, apiKey)
+	}
+
+	requestedDomain := request.URL.Query().Get("domain")
+	if requestedDomain != domain {
+		t.Errorf("domain param = %q, want %q", requestedDomain, domain)
+	}
+}

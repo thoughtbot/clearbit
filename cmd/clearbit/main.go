@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -66,6 +67,13 @@ func requiredArg(ctx *cli.Context, n int) string {
 	}
 
 	return arg
+}
+
+func display(item interface{}) {
+	data, _ := json.MarshalIndent(item, "", "  ")
+
+	os.Stdout.Write(data)
+	os.Stdout.Write([]byte("\n"))
 }
 
 func abort(reason interface{}) {

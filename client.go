@@ -55,14 +55,29 @@ func (c *Client) Get(endpoint string, params url.Values) (*http.Response, error)
 // EnrichPerson finds a person by their email address
 // and returns detailed information about them.
 func (c *Client) EnrichPerson(email string) (*Person, error) {
-	params := url.Values{
-		"email": []string{email},
-	}
-
 	var person *Person
-	err := c.get(EnrichPersonStreamingURL, params, &person)
+
+	err := c.get(
+		EnrichPersonStreamingURL,
+		url.Values{"email": []string{email}},
+		&person,
+	)
 
 	return person, err
+}
+
+// EnrichCompany finds a company by its domain
+// and returns detailed information about it.
+func (c *Client) EnrichCompany(domain string) (*Company, error) {
+	var company *Company
+
+	err := c.get(
+		EnrichCompanyStreamingURL,
+		url.Values{"domain": []string{domain}},
+		&company,
+	)
+
+	return company, err
 }
 
 func (c *Client) get(endpoint string, params url.Values, v interface{}) error {

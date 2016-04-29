@@ -1,9 +1,6 @@
 package main
 
 import (
-	"io"
-	"net/url"
-	"os"
 	"strings"
 
 	"github.com/codegangsta/cli"
@@ -20,28 +17,23 @@ var enrichCommand = cli.Command{
 func enrich(ctx *cli.Context) {
 	var (
 		apiKey = apiKeyFromContext(ctx)
-		token  = requiredArg(ctx, 0)
+		query  = requiredArg(ctx, 0)
+		client = clearbit.NewClient(apiKey, nil)
 	)
 
-	client := clearbit.NewClient(apiKey, nil)
-
-	endpoint, params := prepareLookupRequest(token)
-
-	res, err := client.Get(endpoint, params)
+	item, err := enrichPersonOrCompany(client, query)
 	if err != nil {
 		abort(err)
 	}
-	defer res.Body.Close()
-
-	io.Copy(os.Stdout, res.Body)
+	display(item)
 }
 
-func prepareLookupRequest(token string) (string, url.Values) {
-	if isEmail(token) {
-		return clearbit.EnrichPersonStreamingURL, url.Values{"email": {token}}
+func enrichPersonOrCompany(c *clearbit.Client, query string) (interface{}, error) {
+	if isEmail(query) {
+		return c.EnrichPerson(query)
 	}
 
-	return clearbit.EnrichCompanyStreamingURL, url.Values{"domain": {token}}
+	return c.EnrichCompany(query)
 }
 
 func isEmail(s string) bool {
