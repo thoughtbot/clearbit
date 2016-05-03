@@ -88,6 +88,17 @@ type Person struct {
 	LinkedIn   LinkedInProfile   `json:"linkedin"`
 }
 
+// Prospect describes the basic contact information for a person
+// found through the Prospector API.
+//
+// https://clearbit.com/docs#prospector-api-person-search-response-body
+type Prospect struct {
+	ID    string `json:"id"`
+	Name  Name   `json:"name"`
+	Title string `json:"title"`
+	Email string `json:"email"`
+}
+
 // Name describes a person's name.
 type Name struct {
 	FamilyName string `json:"familyName"`

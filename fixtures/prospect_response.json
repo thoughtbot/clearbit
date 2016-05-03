@@ -1,0 +1,12 @@
+[
+  {
+    "id": "p_2d573999-8a4d-42cc-b47d-c7795adfd7df",
+    "name": {
+      "familyName": "Doe",
+      "fullName": "Jane Doe",
+      "givenName": "Jane"
+    },
+    "title": "CEO",
+    "email": "jane@example.com"
+  }
+]

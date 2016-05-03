@@ -36,22 +36,6 @@ func NewClient(apiKey string, httpClient *http.Client) *Client {
 	}
 }
 
-// Get requests endpoint with the provided params
-// and the client's API key.
-//
-// The caller must close the returned response's Body.
-func (c *Client) Get(endpoint string, params url.Values) (*http.Response, error) {
-	req, err := http.NewRequest("GET", endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.SetBasicAuth(c.apiKey, "")
-	req.URL.RawQuery = params.Encode()
-
-	return c.httpClient.Do(req)
-}
-
 // EnrichPerson finds a person by their email address
 // and returns detailed information about them.
 func (c *Client) EnrichPerson(email string) (*Person, error) {
@@ -78,6 +62,38 @@ func (c *Client) EnrichCompany(domain string) (*Company, error) {
 	)
 
 	return company, err
+}
+
+// ProspectQuery defines the available options for querying
+// the Prospector API.
+type ProspectQuery struct {
+	// Company's domain name to look up (required).
+	Domain string
+
+	// Filters results by first or last name (case-insensitive).
+	Name string
+
+	// Filters results by one or more titles.
+	Titles []string
+}
+
+// Prospect finds a company by its domain name and returns basic
+// information about the people working there.
+func (c *Client) Prospect(q ProspectQuery) ([]*Prospect, error) {
+	var prospects []*Prospect
+
+	err := c.get(
+		ProspectURL,
+		url.Values{
+			"domain":   []string{q.Domain},
+			"email":    []string{"true"},
+			"name":     []string{q.Name},
+			"titles[]": q.Titles,
+		},
+		&prospects,
+	)
+
+	return prospects, err
 }
 
 func (c *Client) get(endpoint string, params url.Values, v interface{}) error {

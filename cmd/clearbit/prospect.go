@@ -1,10 +1,6 @@
 package main
 
 import (
-	"io"
-	"net/url"
-	"os"
-
 	"github.com/codegangsta/cli"
 	"github.com/thoughtbot/clearbit"
 )
@@ -30,19 +26,13 @@ func prospect(ctx *cli.Context) {
 
 	client := clearbit.NewClient(apiKey, nil)
 
-	res, err := client.Get(
-		clearbit.ProspectURL,
-		url.Values{
-			"domain":   []string{domain},
-			"email":    []string{"true"},
-			"name":     []string{name},
-			"titles[]": titles,
-		},
-	)
+	prospects, err := client.Prospect(clearbit.ProspectQuery{
+		Domain: domain,
+		Name:   name,
+		Titles: titles,
+	})
 	if err != nil {
 		abort(err)
 	}
-	defer res.Body.Close()
-
-	io.Copy(os.Stdout, res.Body)
+	display(prospects)
 }

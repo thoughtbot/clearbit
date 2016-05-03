@@ -2,6 +2,7 @@ package clearbit
 
 import (
 	"net/http"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -47,14 +48,7 @@ func TestClientEnrichPerson(t *testing.T) {
 		t.Fatal("Expected person to be present")
 	}
 
-	if request == nil {
-		t.Fatal("Request not sent")
-	}
-
-	username, _, _ := request.BasicAuth()
-	if username != apiKey {
-		t.Errorf("Basic auth username = %q, want %q", username, apiKey)
-	}
+	expectRequestWithAPIKey(t, request, apiKey)
 
 	requestedEmail := request.URL.Query().Get("email")
 	if requestedEmail != email {
@@ -154,17 +148,77 @@ func TestClientEnrichCompany(t *testing.T) {
 		t.Fatal("Expected company to be present")
 	}
 
-	if request == nil {
-		t.Fatal("Request not sent")
-	}
-
-	username, _, _ := request.BasicAuth()
-	if username != apiKey {
-		t.Errorf("basic auth username = %q, want %q", username, apiKey)
-	}
+	expectRequestWithAPIKey(t, request, apiKey)
 
 	requestedDomain := request.URL.Query().Get("domain")
 	if requestedDomain != domain {
 		t.Errorf("domain param = %q, want %q", requestedDomain, domain)
+	}
+}
+
+func TestClientProspect(t *testing.T) {
+	var (
+		domain = "example.com"
+		name   = "Jane"
+		titles = []string{"VP", "CEO"}
+		apiKey = "clearbit-key"
+
+		request *http.Request
+
+		transport = httpmock.NewMockTransport()
+		client    = NewClient(apiKey, &http.Client{Transport: transport})
+	)
+
+	transport.RegisterResponder(
+		"GET",
+		ProspectURL,
+		requestRecorder(
+			&request,
+			httpmock.NewBytesResponder(
+				200,
+				readFixture(t, "prospect_response"),
+			),
+		),
+	)
+
+	prospects, err := client.Prospect(ProspectQuery{
+		Domain: domain,
+		Name:   name,
+		Titles: titles,
+	})
+	if err != nil {
+		t.Fatal("Prospect failed:", err)
+	}
+
+	if len(prospects) == 0 {
+		t.Fatal("Expected prospects to be present")
+	}
+
+	expectRequestWithAPIKey(t, request, apiKey)
+
+	requestedDomain := request.URL.Query().Get("domain")
+	if requestedDomain != domain {
+		t.Errorf("domain param = %q, want %q", requestedDomain, domain)
+	}
+
+	requestedName := request.URL.Query().Get("name")
+	if requestedName != name {
+		t.Errorf("name param = %q, want %q", requestedName, name)
+	}
+
+	requestedTitles := request.URL.Query()["titles[]"]
+	if !reflect.DeepEqual(requestedTitles, titles) {
+		t.Errorf("titles param = %v, want %v", requestedTitles, titles)
+	}
+}
+
+func expectRequestWithAPIKey(t *testing.T, r *http.Request, apiKey string) {
+	if r == nil {
+		t.Fatal("Request not sent")
+	}
+
+	username, _, _ := r.BasicAuth()
+	if username != apiKey {
+		t.Errorf("basic auth username = %q, want %q", username, apiKey)
 	}
 }
