@@ -2,7 +2,7 @@ clearbit
 ========
 
 [![GoDoc Reference](https://godoc.org/github.com/thoughtbot/clearbit?status.svg)][GoDoc]
-[![Circle CI](https://circleci.com/gh/thoughtbot/clearbit.svg?style=svg)](https://circleci.com/gh/thoughtbot/clearbit)
+[![Circle CI](https://circleci.com/gh/thoughtbot/clearbit.svg?style=shield)](https://circleci.com/gh/thoughtbot/clearbit)
 
 `clearbit` is a client library and command-line interface for the Clearbit API.
 
