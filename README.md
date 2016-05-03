@@ -1,17 +1,25 @@
 clearbit
 ========
 
-`clearbit` is a command-line interface to the Clearbit API.
+[![GoDoc Reference](https://godoc.org/github.com/thoughtbot/clearbit?status.svg)][GoDoc]
+[![Circle CI](https://circleci.com/gh/thoughtbot/clearbit.svg?style=svg)](https://circleci.com/gh/thoughtbot/clearbit)
 
-Install
--------
+`clearbit` is a client library and command-line interface for the Clearbit API.
+
+Use it in your project:
+
+```go
+import "github.com/thoughtbot/clearbit"
+```
+
+Or from the command-line:
 
 ```
-go get github.com/thoughtbot/clearbit/cmd/clearbit
+go get -u github.com/thoughtbot/clearbit/cmd/clearbit
 ```
 
-Usage
------
+Usage from the command line
+---------------------------
 
 To use the `clearbit` command,
 first store your [Clearbit API key][clearbit-api-key] in `~/.clearbit_key`.
@@ -19,38 +27,67 @@ first store your [Clearbit API key][clearbit-api-key] in `~/.clearbit_key`.
 Then use the subcommands to interact with the different
 [Clearbit API endpoints][clearbit-api].
 
-For example:
+Get detailed information about a person from their email address:
 
 ```
-> clearbit prospect -title CEO -title COO thoughtbot.com
-[
-  {
-    "id": "...",
-    "name": {
-      "givenName": "Chad",
-      "familyName": "Pytel",
-      "fullName": "Chad Pytel"
-    },
-    "title": "Founder and CEO",
-    "email": "chad@thoughtbot.com",
-    "verified": true
-  },
-  {
-    "id": "...",
-    "name": {
-      "givenName": "Matt",
-      "familyName": "Jankowski",
-      "fullName": "Matt Jankowski"
-    },
-    "title": "COO",
-    "email": "mjankowski@thoughtbot.com",
-    "verified": true
-  }
-]
+$ clearbit enrich b@thoughtbot.com
 ```
+
+Get data about a company from its domain:
+
+```
+$ clearbit enrich thoughtbot.com
+```
+
+Get contact details for a company:
+
+```
+$ clearbit prospect -title CEO -title COO thoughtbot.com
+```
+
+Since each command produces JSON as its output,
+the `clearbit` command pairs nicely with [`jq`][jq] for processing.
+
+Get company copy-pasteable company contacts:
+
+```
+$ clearbit prospect thoughtbot.com |
+    jq '.[] | "\(.name.fullName) <\(.email)>"'
+```
+
+Run `clearbit help [subcommand]` for details on additional options.
 
   [clearbit-api]: https://clearbit.com/docs
   [clearbit-api-key]: https://dashboard.clearbit.com/keys
+  [jq]: https://stedolan.github.io/jq/
+
+Usage from Go
+-------------
+
+The `clearbit` package exposes types for interacting with the Clearbit API and
+the data it returns.
+
+```go
+import "github.com/thoughtbot/clearbit"
+
+client, _ := clearbit.NewClient(os.Getenv("CLEARBIT_API_KEY"))
+
+bernerd, _ := client.EnrichPerson("b@thoughtbot.com")
+thoughtbot, _ := client.EnrichCompany(bernerd.Employment.Domain)
+
+prospects, _ := client.Prospect(clearbit.ProspectQuery{
+  Domain: "thoughtbot.com",
+  Titles: []string{"CEO", "CTO", "VP"},
+})
+
+for _, prospect := range prospects {
+  prospectDetails, _ := client.EnrichPerson(prospect.Email)
+}
+```
+
+For detailed API documentation, [read the go docs][GoDoc].
+
+  [GoDoc]: https://godoc.org/github.com/thoughtbot/clearbit
 
 Contributing
 ------------
