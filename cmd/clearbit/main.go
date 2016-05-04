@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -28,7 +27,8 @@ func main() {
 		enrichCommand,
 		prospectCommand,
 	}
-	app.RunAndExitOnError()
+
+	app.Run(os.Args)
 }
 
 func clearbitKeyLoader(key *string) func(*cli.Context) error {
@@ -59,15 +59,8 @@ func apiKeyFromContext(ctx *cli.Context) string {
 	return ctx.GlobalString("api-key")
 }
 
-func requiredArg(ctx *cli.Context, n int) string {
-	arg := ctx.Args().Get(n)
-
-	if arg == "" {
-		cli.ShowSubcommandHelp(ctx)
-		os.Exit(1)
-	}
-
-	return arg
+func requiredArgError(msg string) error {
+	return cli.NewExitError(msg, 1)
 }
 
 func display(item interface{}) {
@@ -77,7 +70,6 @@ func display(item interface{}) {
 	os.Stdout.Write([]byte("\n"))
 }
 
-func abort(reason interface{}) {
-	fmt.Printf("ERROR: %s\n", reason)
-	os.Exit(1)
+func exitError(err error) error {
+	return cli.NewExitError(err.Error(), 1)
 }

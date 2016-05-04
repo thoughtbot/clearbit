@@ -14,18 +14,25 @@ var enrichCommand = cli.Command{
 	Action:    enrich,
 }
 
-func enrich(ctx *cli.Context) {
+func enrich(ctx *cli.Context) error {
 	var (
 		apiKey = apiKeyFromContext(ctx)
-		query  = requiredArg(ctx, 0)
 		client = clearbit.NewClient(apiKey, nil)
+
+		query = ctx.Args().First()
 	)
+
+	if query == "" {
+		return requiredArgError("Usage: clearbit enrich <email|domain>")
+	}
 
 	item, err := enrichPersonOrCompany(client, query)
 	if err != nil {
-		abort(err)
+		return exitError(err)
 	}
+
 	display(item)
+	return nil
 }
 
 func enrichPersonOrCompany(c *clearbit.Client, query string) (interface{}, error) {

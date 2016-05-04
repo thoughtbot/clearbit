@@ -16,15 +16,19 @@ var prospectCommand = cli.Command{
 	},
 }
 
-func prospect(ctx *cli.Context) {
+func prospect(ctx *cli.Context) error {
 	var (
 		apiKey = apiKeyFromContext(ctx)
-		domain = requiredArg(ctx, 0)
+		client = clearbit.NewClient(apiKey, nil)
+
+		domain = ctx.Args().First()
 		name   = ctx.String("name")
 		titles = ctx.StringSlice("title")
 	)
 
-	client := clearbit.NewClient(apiKey, nil)
+	if domain == "" {
+		return requiredArgError("Usage: clearbit prospect <domain>")
+	}
 
 	prospects, err := client.Prospect(clearbit.ProspectQuery{
 		Domain: domain,
@@ -32,7 +36,9 @@ func prospect(ctx *cli.Context) {
 		Titles: titles,
 	})
 	if err != nil {
-		abort(err)
+		return exitError(err)
 	}
+
 	display(prospects)
+	return nil
 }
