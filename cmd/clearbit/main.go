@@ -21,7 +21,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{Name: "api-key", Usage: "clearbit API key (default ~/.clearbit_key)", Destination: &clearbitKey},
 	}
-	app.Version = "0.1"
+	app.Version = "0.1.1"
 
 	app.Commands = []cli.Command{
 		enrichCommand,
