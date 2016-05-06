@@ -4,18 +4,32 @@ clearbit
 [![GoDoc Reference](https://godoc.org/github.com/thoughtbot/clearbit?status.svg)][GoDoc]
 [![Circle CI](https://circleci.com/gh/thoughtbot/clearbit.svg?style=shield)](https://circleci.com/gh/thoughtbot/clearbit)
 
-`clearbit` is a client library and command-line interface for the Clearbit API.
+`clearbit` is a client library and command-line interface
+for the [Clearbit] API.
 
-Use it in your project:
+[Clearbit]: https://clearbit.com/
 
-```go
-import "github.com/thoughtbot/clearbit"
+Install
+-------
+
+For OS X users, you can install and upgrade through the Homebrew package:
+
+```
+brew tap thoughtbot/formulae
+brew update
+brew install clearbit
 ```
 
-Or from the command-line:
+For anyone with Go installed, you can install from the command-line:
 
 ```
 go get -u github.com/thoughtbot/clearbit/cmd/clearbit
+```
+
+Use it in your Go project:
+
+```go
+import "github.com/thoughtbot/clearbit"
 ```
 
 Usage from the command line
@@ -105,7 +119,7 @@ issue trackers, chatrooms, and mailing lists.
 License
 -------
 
-clearbit is Copyright (c) 2016 thoughtbot, inc. It is free software,
+`clearbit` is Copyright (c) 2016 thoughtbot, inc. It is free software,
 and may be redistributed under the terms specified in the [LICENSE] file.
 
 [LICENSE]: /LICENSE
@@ -113,7 +127,7 @@ and may be redistributed under the terms specified in the [LICENSE] file.
 About
 -----
 
-clearbit is maintained by Bernerd Schaefer.
+`clearbit` is maintained by Bernerd Schaefer.
 
 ![thoughtbot](https://thoughtbot.com/logo.png)
 
