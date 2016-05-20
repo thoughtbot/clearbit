@@ -158,10 +158,12 @@ func TestClientEnrichCompany(t *testing.T) {
 
 func TestClientProspect(t *testing.T) {
 	var (
-		domain = "example.com"
-		name   = "Jane"
-		titles = []string{"VP", "CEO"}
-		apiKey = "clearbit-key"
+		domain    = "example.com"
+		name      = "Jane"
+		role      = "marketing"
+		seniority = "executive"
+		titles    = []string{"VP", "CEO"}
+		apiKey    = "clearbit-key"
 
 		request *http.Request
 
@@ -182,9 +184,11 @@ func TestClientProspect(t *testing.T) {
 	)
 
 	prospects, err := client.Prospect(ProspectQuery{
-		Domain: domain,
-		Name:   name,
-		Titles: titles,
+		Domain:    domain,
+		Name:      name,
+		Role:      role,
+		Seniority: seniority,
+		Titles:    titles,
 	})
 	if err != nil {
 		t.Fatal("Prospect failed:", err)
@@ -204,6 +208,16 @@ func TestClientProspect(t *testing.T) {
 	requestedName := request.URL.Query().Get("name")
 	if requestedName != name {
 		t.Errorf("name param = %q, want %q", requestedName, name)
+	}
+
+	requestedRole := request.URL.Query().Get("role")
+	if requestedRole != role {
+		t.Errorf("role param = %q, want %q", requestedRole, role)
+	}
+
+	requestedSeniority := request.URL.Query().Get("seniority")
+	if requestedSeniority != seniority {
+		t.Errorf("seniority param = %q, want %q", requestedSeniority, seniority)
 	}
 
 	requestedTitles := request.URL.Query()["titles[]"]

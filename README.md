@@ -46,10 +46,10 @@ Get data about a company from its domain:
 $ clearbit enrich thoughtbot.com
 ```
 
-Get contact details for a company:
+Get contact details for a company ([role & seniority picklist][role-seniority]):
 
 ```
-$ clearbit prospect -title CEO -title COO thoughtbot.com
+$ clearbit prospect -role marketing -seniority executive thoughtbot.com
 ```
 
 Since each command produces JSON as its output,
@@ -133,3 +133,4 @@ or [hire us][hire] to help build your product.
 
 [community]: https://thoughtbot.com/community?utm_source=github
 [hire]: https://thoughtbot.com/hire-us?utm_source=github
+[role-seniority]: http://support.clearbit.com/article/120-employment-role-and-seniority

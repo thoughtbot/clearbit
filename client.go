@@ -73,6 +73,12 @@ type ProspectQuery struct {
 	// Filters results by first or last name (case-insensitive).
 	Name string
 
+	// Filters results by job role (case-sensitive).
+	Role string
+
+	// Filters results by job seniority (case-sensitive).
+	Seniority string
+
 	// Filters results by one or more titles.
 	Titles []string
 }
@@ -85,10 +91,12 @@ func (c *Client) Prospect(q ProspectQuery) ([]*Prospect, error) {
 	err := c.get(
 		ProspectURL,
 		url.Values{
-			"domain":   []string{q.Domain},
-			"email":    []string{"true"},
-			"name":     []string{q.Name},
-			"titles[]": q.Titles,
+			"domain":    []string{q.Domain},
+			"email":     []string{"true"},
+			"name":      []string{q.Name},
+			"role":      []string{q.Role},
+			"seniority": []string{q.Seniority},
+			"titles[]":  q.Titles,
 		},
 		&prospects,
 	)
