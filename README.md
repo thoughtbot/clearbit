@@ -9,8 +9,8 @@ for the [Clearbit] API.
 
 [Clearbit]: https://clearbit.com/
 
-Install
--------
+Install for the command line
+----------------------------
 
 For OS X users, you can install and upgrade through the Homebrew package:
 
@@ -20,25 +20,18 @@ brew update
 brew install clearbit
 ```
 
-For anyone with Go installed, you can install from the command-line:
+Or, for anyone with Go installed, you can install from the command-line:
 
 ```
 go get -u github.com/thoughtbot/clearbit/cmd/clearbit
 ```
 
-Use it in your Go project:
-
-```go
-import "github.com/thoughtbot/clearbit"
-```
+Then, store your [Clearbit API key][clearbit-api-key] in `~/.clearbit_key`.
 
 Usage from the command line
 ---------------------------
 
-To use the `clearbit` command,
-first store your [Clearbit API key][clearbit-api-key] in `~/.clearbit_key`.
-
-Then use the subcommands to interact with the different
+Use the subcommands to interact with the different
 [Clearbit API endpoints][clearbit-api].
 
 Get detailed information about a person from their email address:
