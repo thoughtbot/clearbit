@@ -122,9 +122,10 @@ About
 
 `clearbit` is maintained by Bernerd Schaefer.
 
+[thoughtbot's Go development team]: <https://thoughtbot.com/services/go>  "Go development team | Hire thoughtbot Gophers"
+
 ![thoughtbot](https://thoughtbot.com/logo.png)
 
-clearbit is maintained and funded by thoughtbot, inc.
 The names and logos for thoughtbot are trademarks of thoughtbot, inc.
 
 We love open source software!
