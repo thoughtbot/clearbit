@@ -5,6 +5,14 @@ import (
 	"strconv"
 )
 
+// CombinedResponse is the union of a Person and a Company.
+//
+// https://clearbit.com/docs?javascript#enrichment-api-combined-api
+type CombinedResponse struct {
+	Company Company `json:"company"`
+	Person  Person  `json:"person"`
+}
+
 // Company describes company data known to Clearbit.
 //
 // https://clearbit.com/docs#enrichment-api-company-api-attributes

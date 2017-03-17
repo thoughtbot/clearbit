@@ -5,6 +5,20 @@ import (
 	"testing"
 )
 
+func TestEnrichmentCombinedResponse(t *testing.T) {
+	var combined CombinedResponse
+
+	unmarshalFixture(t, "enrichment_combined_response", &combined)
+
+	if combined.Person.ID == "" {
+		t.Fatal("Expected person to be present")
+	}
+
+	if combined.Company.ID == "" {
+		t.Fatal("Expected company to be present")
+	}
+}
+
 func TestEnrichmentPersonResponse(t *testing.T) {
 	var person Person
 

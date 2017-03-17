@@ -156,6 +156,46 @@ func TestClientEnrichCompany(t *testing.T) {
 	}
 }
 
+func TestClientCombinedEnrich(t *testing.T) {
+	var (
+		email  = "user@example.com"
+		apiKey = "clearbit-key"
+
+		request *http.Request
+
+		transport = httpmock.NewMockTransport()
+		client    = NewClient(apiKey, &http.Client{Transport: transport})
+	)
+
+	transport.RegisterResponder(
+		"GET",
+		EnrichCombinedStreamingURL,
+		requestRecorder(
+			&request,
+			httpmock.NewBytesResponder(
+				200,
+				readFixture(t, "enrichment_combined_response"),
+			),
+		),
+	)
+
+	combined, err := client.Enrich(email)
+	if err != nil {
+		t.Fatal("EnrichCombined failed:", err)
+	}
+
+	if combined.Company.ID == "" {
+		t.Fatal("Expected company to be present in combined response")
+	}
+
+	expectRequestWithAPIKey(t, request, apiKey)
+
+	requestedEmail := request.URL.Query().Get("email")
+	if requestedEmail != email {
+		t.Errorf("email param = %q, want %q", requestedEmail, email)
+	}
+}
+
 func TestClientProspect(t *testing.T) {
 	var (
 		domain    = "example.com"

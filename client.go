@@ -10,9 +10,10 @@ import (
 
 // These are the valid services and resources of the Clearbit API.
 const (
-	ProspectURL               = "https://prospector.clearbit.com/v1/people/search"
-	EnrichCompanyStreamingURL = "https://company-stream.clearbit.com/v2/companies/find"
-	EnrichPersonStreamingURL  = "https://person-stream.clearbit.com/v2/people/find"
+	ProspectURL                = "https://prospector.clearbit.com/v1/people/search"
+	EnrichCombinedStreamingURL = "https://person.clearbit.com/v2/combined/find"
+	EnrichCompanyStreamingURL  = "https://company-stream.clearbit.com/v2/companies/find"
+	EnrichPersonStreamingURL   = "https://person-stream.clearbit.com/v2/people/find"
 )
 
 // Client provides access to the Clearbit API.
@@ -34,6 +35,21 @@ func NewClient(apiKey string, httpClient *http.Client) *Client {
 		apiKey:     apiKey,
 		httpClient: httpClient,
 	}
+}
+
+// Enrich finds a person by their email address
+// and returns detailed information about both them
+// as well as their company
+func (c *Client) Enrich(email string) (*CombinedResponse, error) {
+	var combined *CombinedResponse
+
+	err := c.get(
+		EnrichCombinedStreamingURL,
+		url.Values{"email": []string{email}},
+		&combined,
+	)
+
+	return combined, err
 }
 
 // EnrichPerson finds a person by their email address
