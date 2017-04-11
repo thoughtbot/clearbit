@@ -12,6 +12,9 @@ var enrichCommand = cli.Command{
 	Usage:     "enrich a person or company",
 	ArgsUsage: "email or domain",
 	Action:    enrich,
+	Flags: []cli.Flag{
+		cli.BoolFlag{Name: "combined", Usage: "Enrich and get both person and company data (email only)"},
+	},
 }
 
 func enrich(ctx *cli.Context) error {
@@ -19,14 +22,15 @@ func enrich(ctx *cli.Context) error {
 		apiKey = apiKeyFromContext(ctx)
 		client = clearbit.NewClient(apiKey, nil)
 
-		query = ctx.Args().First()
+		combined = ctx.Bool("combined")
+		query    = ctx.Args().First()
 	)
 
 	if query == "" {
 		return requiredArgError("Usage: clearbit enrich <email|domain>")
 	}
 
-	item, err := enrichPersonOrCompany(client, query)
+	item, err := enrichPersonOrCompany(client, query, combined)
 	if err != nil {
 		return exitError(err)
 	}
@@ -35,9 +39,13 @@ func enrich(ctx *cli.Context) error {
 	return nil
 }
 
-func enrichPersonOrCompany(c *clearbit.Client, query string) (interface{}, error) {
+func enrichPersonOrCompany(c *clearbit.Client, query string, combined bool) (interface{}, error) {
 	if isEmail(query) {
-		return c.EnrichPerson(query)
+		if combined {
+			return c.Enrich(query)
+		} else {
+			return c.EnrichPerson(query)
+		}
 	}
 
 	return c.EnrichCompany(query)
