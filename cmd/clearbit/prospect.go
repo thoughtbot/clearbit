@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/codegangsta/cli"
 	"github.com/thoughtbot/clearbit"
+	"gopkg.in/urfave/cli.v1"
 )
 
 var prospectCommand = cli.Command{

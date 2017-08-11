@@ -3,8 +3,8 @@ package main
 import (
 	"strings"
 
-	"github.com/codegangsta/cli"
 	"github.com/thoughtbot/clearbit"
+	"gopkg.in/urfave/cli.v1"
 )
 
 var enrichCommand = cli.Command{
